@@ -31,14 +31,13 @@ let barArr = [
 
 let simpleBar = {
     beatsPerBar: +upper.value,
-    lowerNum: 4,
     tempo: +inputTempo.value,
     repeatBar: 100
 
 };
 
 let increase = 0;
-let everyBars = 0;
+let everyXBars = 0;
 let mode = "simple";
 
 inputTempo.min = 30;
@@ -76,7 +75,7 @@ increaseBy.addEventListener("input", (e) => {
 });
 
 every.addEventListener("input", (e) => {
-    everyBars = +e.target.value;
+    everyXBars = +e.target.value;
 })
 
 
@@ -196,8 +195,8 @@ function countBars() {
 
     ///////// incrementos
 
-    if (mode === "simple" && everyBars !== 0) {
-        if (barCounter === everyBars + 1) {
+    if (mode === "simple" && everyXBars !== 0) {
+        if (barCounter === everyXBars + 1) {
             clearInterval(intervalo);
             barArr[subset].tempo += increase;
             barCounter = 1;
@@ -520,7 +519,7 @@ function reset() {
     every.value = 0;
 
     increase = +increaseBy.value;
-    everyBars = +every.value;
+    everyXBars = +every.value;
 
     toggleMetronome = "off";
     inputTempo.value = simpleBar.tempo;
@@ -597,14 +596,22 @@ function clearResetAdvanced() {
 let deleteLast = document.querySelector("#deletelast");
 
 deleteLast.addEventListener("click", () => {
+    if (barArr.length <= 1) {
+        displaySubsetInfo.textContent = "";
+
+    } else {
+
     barArr.pop();
-    displaySubsetInfo.textContent = JSON.stringify(barArr);
+    //displaySubsetInfo.textContent = JSON.stringify(barArr);
+    displayNewPhrase()
+    }
     clearInterval(intervalo);
     toggleMetronome = "off";
     beatCounter = 0;
     barCounter = 0;
     subset = 0;
     paraBeatCounter = 0;
+
 })
 
 let repeadAdv = document.querySelector("#repeatadv");
@@ -624,7 +631,7 @@ repeadAdv.addEventListener("input", () => {
 })
 
 let increaseAdv = document.querySelector("#increaseadv");
-let everyCycles = document.querySelector("#everyCycles");
+let everyXCycles = document.querySelector("#everyCycles");
 
 let percent = 0;
 let percentDecimal = percent / 100;
@@ -635,7 +642,12 @@ increaseAdv.addEventListener("input", (e) => {
     percent = +e.target.value;
 })
 
-everyCycles.addEventListener("input", (e) => {
+everyXCycles.addEventListener("input", (e) => {
     cycles = +e.target.value;
 })
+
+for (let item of barArr) {
+  //  item.tempo = item.tempo * percentDecimal;
+    
+}
 
