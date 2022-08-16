@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metronomo</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./script.js" defer></script>
+</head>
+
+<body>
+    <div class="metronome-light"></div>
+    <div class="dispBeatNumber"></div>
+    <label for="simple">Simple Mode</label>
+    <input class="radio" type="radio" id="simple" value="simple" name="advancedToggle" >
+    <label for="advanced">Advanced Mode</label>
+    <input class="radio" type="radio" id="advanced" value="advanced" name="advancedToggle" checked>
+
+    <div class="simple">
+        <input type="number" class="input-tempo" value="60">
+
+        <button type="button" class="start-metronome">Start/stop</button>
+        <div class="bpm-display">BPM:</div>
+
+
+        <label for="upper-numeral">Beats per bar</label>
+        <input id="upper-numeral" type="number" value="4"><br>
+      
+        <br><br> 
+        <button id="autospeed" type="button">Auto increase speed >></button>
+        <div class="autospeed-wrapper hide">
+            <h3>Automatic speed increase:</h3>
+            <label for="increase-by">Increase tempo by <input id="increase-by" type="number" value="0"> BPM </label>
+            
+            <label for="every">every <input id="every" type="number" value ="0">bars.</label>
+            <button type="button" class="start-pause">Start/pause</button>
+            <button type="button" class="rewind">Rewind</button>
+            <button type="button" class="reset-simple">Clear/reset</button>
+        </div>
+
+    </div>
+   
+    
+
+    <div class="advanced">
+        <h2>Advanced mode</h2>
+        <label for="advBars">How many bars:</label>
+        <input id="advBars" type="number">
+        <label for="advBpb">Beats per bar</label>
+        <input id="advBpb" type="number">
+        <label for="advTmp">Tempo:</label>
+        <input type="number" id="advTmp">
+        <!-- <label for="advFigure">Figure</label>
+        <input type="number" id="advFigure"> -->
+        <button type="button" id="addBars">Add</button>
+        <button type="button" id="playAdvanced">Play phrase</button>
+        <button type="button" id="clearadv">Clear</button>
+        <button type="button" id="deletelast">Delete Last bar</button>
+        <label for="repeatadv">Repeat phrase?</label>
+        <input type="checkbox" id="repeatadv">
+        <label for="increaseadv">Increase tempo of whole phrase by <input type="number" id="increaseadv"> percent
+        </label><label for="everyCycles">, every <input id="everyCycles" type="number"> cycles</label>
+
+        <div class="displayGroupInfo"></div>
+        <fieldset>
+            <legend>saved phrases</legend>
+            <div class="displaySavedPhrases"></div>
+        </fieldset>
+    </div>
+
+</body>
+
+</html>
