@@ -107,8 +107,10 @@ function playMetronomeSimple() {
             savedTempo = simpleBar.tempo;
             savedBPB = simpleBar.beatsPerBar;
         }
+        
     } else if (toggleMetronome === "on") {
         playMetronome();
+
 
     }
 }
@@ -203,7 +205,10 @@ function countBars() {
             intervalo = setInterval(soundBeat, 60000 / barArr[subset].tempo);
         }
     }
+   
 }
+
+
 
 function setCounter() {
     if (paraBeatCounter === barArr[subset].repeatBar * barArr[subset].beatsPerBar + 1 && subset === barArr.length - 1) {
@@ -298,6 +303,8 @@ function pushSubset() {
     barArr.push(new Subset(+advBpb.value, "", +advTmp.value, +advBars.value));
     // display sets
     displayNewPhrase();
+    hideUnhideControls();
+
 
 
 }
@@ -306,32 +313,50 @@ let inputPhraseName;
 function displayNewPhrase() {
     displaySubsetInfo.textContent = "";
     let inner = "";
-    
+     let i1 = 0;
     for (let item of barArr) {
-        inner += `Beats per Bar: ${item.beatsPerBar}; Tempo: ${item.tempo}; Cycle bar ${item.repeatBar} times; name: ${item.name}`;
+        i1++;
+        inner += `Subset ${i1}: Beats per Bar: ${item.beatsPerBar}; Tempo: ${item.tempo}; Cycle bar ${item.repeatBar} times. <br>`;
     }
     let subsetInfo = document.createElement("p");
-    subsetInfo.textContent = inner;
+    subsetInfo.innerHTML = inner;
     displaySubsetInfo.appendChild(subsetInfo);
-    inputPhraseName = document.createElement("input");
-    inputPhraseName.placeholder = "name (optional)";
-    displaySubsetInfo.appendChild(inputPhraseName);
-    let savePhraseButton = document.createElement("button");
-    savePhraseButton.classList.add("savePhrase");
-    savePhraseButton.textContent = `save`;
-    displaySubsetInfo.appendChild(savePhraseButton);
+    inputPhraseName = document.querySelector("#htmlInputName");
+  //  inputPhraseName.placeholder = "name (optional)";
+  //  displaySubsetInfo.appendChild(inputPhraseName);
+    let savePhraseButton = document.querySelector("#htmlSave");
+  //  savePhraseButton.classList.add("savePhrase");
+  //  savePhraseButton.textContent = `save`;
+  //  displaySubsetInfo.appendChild(savePhraseButton);
 
-    let clearPhrase = document.createElement("button");
-    clearPhrase.classList.add("clearPhrase");
-    clearPhrase.textContent = "clear";
-    displaySubsetInfo.appendChild(clearPhrase);
-   // displaySubsetInfo.innerHTML = `${inner} <button id="savePhrase" type="button">save in browser</button>`;
+   // let clearPhrase = document.createElement("button");
+   // clearPhrase.classList.add("clearPhrase");
+  //  clearPhrase.textContent = "clear";
+  //  displaySubsetInfo.appendChild(clearPhrase);
     savePhraseButton.addEventListener("click", savePersistent);
-    clearPhrase.addEventListener("click", clearResetAdvanced);
+  //  clearPhrase.addEventListener("click", clearResetAdvanced);
     
 
 }
+//
 
+let advancedControls = document.querySelector(".advanced-controls");
+
+hideUnhideControls();
+function hideUnhideControls() {
+   if ( barArr.length === 0) {
+    for (let item of advancedControls.querySelectorAll("*")) {
+        item.disabled = true;
+    }
+   } else if ( barArr.length > 0) {
+    for (let item of advancedControls.querySelectorAll("*")) {
+        item.disabled = false;
+
+   }
+   }
+}
+
+ 
 let counterFulls;
 
 function savePersistent() {
@@ -387,15 +412,24 @@ function savePersistent() {
      
 
      // display saved phrase
-     displaySavedPhrase();
+  //   displaySavedPhrase();
      clearResetAdvanced();
      savedPhraseDisplay.textContent = "";
      refreshStoredDisplay();
     
 }
+
+let parsed;
+let parsed2;
+
 function refreshStoredDisplay() {
 
+    
     for (let i = 1; i <6 ; i++) {
+
+      //   barArr = [];
+         parsed2 = JSON.parse(localStorage.getItem(`ph${i}`));
+
         let playSaved = document.createElement("button");
         playSaved.textContent = "Play";
         
@@ -404,16 +438,22 @@ function refreshStoredDisplay() {
         if (localStorage.getItem(`ph${i}`) === null) {
             continue;
         } 
-        oldSavedPhrases.innerText = `(${i}) ${localStorage.getItem(`ph${i}`)}`
+
+        for (let [index,item] of parsed2.entries()) {
+            console.log("tempo: " +item.tempo)
+            oldSavedPhrases.innerHTML += `Subset ${index+1}) Tempo: ${item.tempo}, Beats per bar: ${item.beatsPerBar}, Repeats ${item.repeatBar}<br>`
+
+        }
+
+      //  oldSavedPhrases.innerText = JSON.stringify(parsed2);//`${localStorage.getItem(`ph${i}`)}`
         savedPhraseDisplay.appendChild(oldSavedPhrases);
         oldSavedPhrases.appendChild(playSaved)
         playSaved.addEventListener("click", ()=>{
             barArr = [];
-            let parsed = JSON.parse(localStorage.getItem(`ph${i}`));
+            parsed = JSON.parse(localStorage.getItem(`ph${i}`));
             for (let item of parsed) {
                 
                 barArr.push(item);
-                console.log(item);
 
             }
             playMetronomeAdvanced();
@@ -465,7 +505,7 @@ playPhrase.addEventListener("click", playMetronomeAdvanced);
 
 function playMetronomeAdvanced() {
     if (barArr.length === 0) {
-        console.log("enter at least one bar");
+        alert("enter at least one bar");
     } else {
         playMetronome();
     }
@@ -553,24 +593,25 @@ function rewind() {
     beatCounter = 0;
 }
 
-let startPause = document.querySelector(".start-pause");
+// let startPause = document.querySelector(".start-pause");
 
-startPause.addEventListener("click", playMetronomeSimple);
+// startPause.addEventListener("click", playMetronomeSimple);
 
 let autoSpeedBtn = document.querySelector("#autospeed");
 let autoSpeedWrapper = document.querySelector(".autospeed-wrapper");
 
+
 let autoSpeedVisible = "no";
 
 autoSpeedBtn.addEventListener("click", () => {
-    if (autoSpeedVisible === "yes") {
+    if (autoSpeedVisible === "yes") { 
         autoSpeedWrapper.classList.add("hide");
         startMetronome.classList.remove("hide");
         autoSpeedVisible = "no";
         reset();
     } else if (autoSpeedVisible === "no") {
         autoSpeedWrapper.classList.remove("hide");
-        startMetronome.classList.add("hide");
+     //   startMetronome.classList.add("hide");
         autoSpeedVisible = "yes";
     }
 })
@@ -579,8 +620,9 @@ let clearadv = document.querySelector("#clearadv");
 
 clearadv.addEventListener("click", clearResetAdvanced);
 function clearResetAdvanced() {
+
     barArr = [];
-    displaySubsetInfo.textContent = JSON.stringify(barArr);
+    displaySubsetInfo.textContent = "";
     clearInterval(intervalo);
     toggleMetronome = "off";
     beatCounter = 0;
@@ -591,6 +633,9 @@ function clearResetAdvanced() {
     advBars.value = 0;
   //  advFigure.value = 0;
     advTmp.value = 0;
+    hideUnhideControls();
+
+
 }
 
 let deleteLast = document.querySelector("#deletelast");
@@ -638,16 +683,36 @@ let percentDecimal = percent / 100;
 let cycles = 0;
 let cycleCounter = 0;
 
-increaseAdv.addEventListener("input", (e) => {
-    percent = +e.target.value;
-})
+// increaseAdv.addEventListener("input", (e) => {
+//     percent = +e.target.value;
+// })
 
-everyXCycles.addEventListener("input", (e) => {
-    cycles = +e.target.value;
-})
+// everyXCycles.addEventListener("input", (e) => {
+//     cycles = +e.target.value;
+// })
 
-for (let item of barArr) {
-  //  item.tempo = item.tempo * percentDecimal;
+// for (let item of barArr) {
+//   //  item.tempo = item.tempo * percentDecimal;
     
-}
+// }
 
+// let repeatSum = 0;
+
+// function countCycles() {
+//     for (let item of barArr) {
+//         repeatSum += item.repeatBar;
+//         console.log(repeatSum);
+//     }
+
+//     if (mode === "advanced" && everyXCycles !== 0) {
+//         if (cycleCounter === everyXCycles + 1) {
+//             clearInterval(intervalo);
+//             for (let item of barArr) {
+//                 item.tempo = item.tempo * percentDecimal;
+                
+//             }
+//             cycleCounter = 1;
+//             intervalo = setInterval(soundBeat, 60000 / )
+//         }
+//     }
+// }
